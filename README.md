@@ -43,7 +43,7 @@ Answer: what happened, how the attacker got in, what they touched, and whether i
 ---
 
 
-## 5. Walkthrough + Questions
+## 4. Walkthrough + Questions
 
 First, RDP into the Windows machine
 ![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 143326.png>)
@@ -54,10 +54,91 @@ Locate artifact files
 
 ### What version of PHP was running on the server during the incident?: 
 **Answer:** 8.2.19
+
  **Steps:**
  Navigate to the the PHP installation directory, locate snapshot.txt. This serves as an official build manifest and configuration log
  ![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 143921.png>)
 
  Here we find the version and note the generation date "(2024-05-08)"
 
----
+ ![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 143956.png>)
+
+ ---
+
+ ### When PHP is configured to run as CGI, which directive in httpd.conf specifies the scripts that handle requests for PHP files?
+ **Answer:** Action
+
+ **Steps:** Locate ...\artifacts\Apache24\conf\httpd.conf
+
+ Ctrl + F to find directives associated with Common Gateway Interface (CGI)
+
+ ![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 161131.png>)
+ 
+ ---
+
+ ### What is the IP address of the attacker who attempted to exploit our server?
+ **Answer:**
+
+ **Steps:** Go to the Apache error logs .../Apache24/logs/error.log
+ ![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 162506.png>)
+
+ In the 7th line we can see the logs associated with the IP address
+ ![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 163008.png>)
+
+ ![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 164655.png>)
+
+ ### The attacker targeted a specific page on the server with malicious payloads. Which page did the attacker target with malicious payloads?
+
+ **Answer:** upload.php
+
+ **Steps:** View access logs; .../Apache24/logs/error.log
+
+ ![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 165412.png>)
+
+ Note the "POST /upload.php?%ADd+allow_url_include%3D1+-d+auto_prepend_file%3Dphp://input"
+ 
+ This query string is the exploit
+
+ ![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 170158.png>)
+
+### What version of Apache is running on the server?
+
+**Answer:** 2.4.59
+
+**Steps:** Go back to error.log, at the top
+
+![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 170103.png>)
+
+![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 170327.png>)
+
+### The attacker managed to execute commands on the server. What was the first process initiated by the attacker’s commands during their successful attempt?
+
+**Answer:** whoami.exe
+
+**Steps:** Use PECmd to parse the set of prefetch files and decompress
+
+![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 172508.png>)
+
+![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 171906.png>)
+
+![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 172748.png>)
+
+Open in Timeline Explorer. We can align this time with around the same time that the attacker was targeting uploads.php
+
+![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 180607.png>)
+
+### Before the attacker was detected and blocked, they executed another command, launching a new process. What process was launched by this command?
+
+**Answer:** calc.exe
+
+**Steps:** Look just below where the attacker ran whoami.exe
+
+![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 180932.png>)
+
+### What is the CVE number of the exploit used by the attacker?
+
+**Answer:** CVE-2024-4577
+
+**Steps:** Look up PHP CGI exploit
+
+![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 181155.png>)
