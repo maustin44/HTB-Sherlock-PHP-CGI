@@ -46,17 +46,17 @@ Answer: what happened, how the attacker got in, what they touched, and whether i
 ## 5. Walkthrough + Questions
 
 First, RDP into the Windows machine
-![alt text](<Screenshot 2026-11-09 143326.png>)
-![alt text](<Screenshot 2026-11-09 143359.png>)
+![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 143326.png>)
+![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 143359.png>)
 
 Locate artifact files
-![alt text](<Screenshot 2026-11-09 143515.png>)
+![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 143515.png>)
 
 ### What version of PHP was running on the server during the incident?: 
 **Answer:** 8.2.19
  **Steps:**
  Navigate to the the PHP installation directory, locate snapshot.txt. This serves as an official build manifest and configuration log
- ![alt text](<Screenshot 2026-11-09 143921.png>)
+ ![alt text](<PHP-CGI_screenshots/Screenshot 2026-11-09 143921.png>)
 
  Here we find the version and note the generation date "(2024-05-08)"
 
